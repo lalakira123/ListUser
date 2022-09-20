@@ -1,25 +1,34 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import styled from "styled-components";
 
 import PageContainer from "../components/PageContainer";
 import BoxUser from "../components/BoxUser";
-import styled from "styled-components";
+import DataContext from './../context/DataContext';
 
 export default function UsersList() {
   const [users, setUsers] = useState([]);
-  const [data, setData] = useState([]);
   const [searchName, setSearchName] = useState('');
 
+  const navigate = useNavigate();
+
+  const { data, setData } = useContext(DataContext);
+
   useEffect(() => {
-    const promise = axios.get('https://gorest.co.in/public/v2/users');
-    promise.then((response) => {
-      const { data } = response;
+    if(data.length === 0){
+      const promise = axios.get('https://gorest.co.in/public/v2/users');
+      promise.then((response) => {
+        setUsers(response.data);
+        setData(response.data);
+        ;
+      });
+      promise.catch((e) => {
+        console.log(e);
+      });
+    } else {
       setUsers(data);
-      setData(data);
-    });
-    promise.catch((e) => {
-      console.log(e);
-    });
+    }
   }, []);
 
   function filterStatusHandler(status){
@@ -65,13 +74,17 @@ export default function UsersList() {
         />
         <p onClick={() => findNameHandler(searchName)}>Buscar</p>
       </div>
+      <div className="filters">
+        <h2 className="plus" onClick={() => navigate('/form')}> + NOVO USUÁRIO</h2>
+      </div>
       <PageContainer>
         {
           users.length > 0 ?
             users.map((item) => {
-              const { name, email, gender, status } = item;
+              const { id, name, email, gender, status } = item;
               return(
                 <BoxUser 
+                  key={id}
                   name={name}
                   email={email}
                   gender={gender}
@@ -111,6 +124,12 @@ const Page = styled.div`
       height: 30px;
       border-radius: 20px;
       border: none;
+      padding: 10px;
+    }
+    .plus {
+      color: #ffffff;
+      border-radius: 20px;
+      background-color: #000000;
       padding: 10px;
     }
   }
