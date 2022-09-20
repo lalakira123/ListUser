@@ -37,7 +37,7 @@ export default function Form(){
     <>
     <Page>
       <h1>Adicionar Usuário</h1>
-      <p className={'back'} onClick={() => navigate('/')}>Voltar para lista de usuários</p>
+      <p className={'back'} onClick={() => navigate('/')}> - Voltar para lista de usuários</p>
       <PageContainer>
         <Forms onSubmit={submitHandler}>
           <input 
@@ -82,7 +82,16 @@ const Page = styled.div`
     padding-top: 20px;
   }
   .back {
+    display: flex;
+    color: #ffffff;
     margin-top: 10px;
+    border-radius: 20px;
+    background-color: #000000;
+    width: 200px;
+    height: 50px;
+    align-items: center;
+    padding: 10px;
+    margin-right: 20px;
   }
 `;
 
